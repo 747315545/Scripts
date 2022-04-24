@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>本地导航</title>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <style type="text/css">
+      .bg-body {
+        background: -webkit-linear-gradient(
+          top,
+          rgb(203, 235, 219) 0%,
+          rgb(55, 148, 192) 120%
+        );
+        width: 100%;
+        height: 100%;
+        min-height: 100vh;
+        margin: 0px;
+        padding: 0px;
+        position: relative;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
+      .container {
+        /* width: 1280px; */
+        margin: 0px auto;
+        padding: 30px 20px;
+        height: auto;
+        display: flex;
+        display: -webkit-flex;
+        justify-content: flex-start;
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+
+      .each-part {
+        width: 50%;
+        height: auto;
+        border-radius: 8px;
+      }
+
+      .each-part > .title {
+        font-size: 22px;
+        display: flex;
+        padding-bottom: 10px;
+      }
+
+      .each-part > .content {
+        width: 100%;
+        height: auto;
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: row;
+        flex-wrap: wrap;
+        padding-bottom: 40px;
+      }
+
+      .each-part > .content > .each-div {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        margin: 5px;
+        width: 190px;
+        height: 90px;
+        padding: 10px;
+        background-color: rgba(230, 247, 255, 0.76);
+        border-radius: 15px;
+      }
+
+      .each-part > .content .title {
+        color: rgba(49, 70, 89, 1);
+        font-size: 20px;
+        font-weight: bold;
+        text-align: center;
+      }
+
+      .each-part:nth-child(1) > .content > .each-div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .each-part:nth-child(1) > .content .title {
+        font-size: 18px;
+      }
+
+      .each-part > .content > .each-div > a {
+        display: inline-block;
+        width: 190px;
+        text-align: center;
+        border-bottom: 1px solid rgba(85, 89, 104, 0.815);
+        padding-bottom: 5px;
+      }
+
+      .each-part > .content > .each-div > a > img {
+        width: 16px;
+        height: 16px;
+        margin-right: 2px;
+      }
+
+      .each-part > .content > .each-div > a > span {
+        height: 20px;
+      }
+
+      .each-part > .content > .each-div .desc {
+        font-size: 13px;
+        padding-top: 5px;
+      }
+
+      .each-part > .content > .each-div > a :hover {
+        color: teal;
+      }
+
+      .bg-body {
+        background-size: 1400% 300%;
+        /* background-size: 100% 100%; */
+        animation: mymove 10s ease infinite;
+        -webkit-animation: mymove 10s ease infinite;
+        -moz-animation: mymove 10s ease infinite;
+      }
+
+      @keyframes mymove {
+        0% {
+          background-position: 0% 0%;
+        }
+
+        50% {
+          background-position: 50% 100%;
+        }
+
+        100% {
+          background-position: 100% 0%;
+        }
+      }
+
+
+
+    </style>
+</head>
+
+<body class="bg-body">
+<div class="container">
+      <span
+              id="quote-container"
+              style="position: absolute; right: 20px; top: 5px"
+      ></span>
+</div>
+</body>
+<script>
+    var xhr = new XMLHttpRequest();
+    xhr.open("get", "https://v1.hitokoto.cn?c=k&max_length=20");
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4) {
+        var data = JSON.parse(xhr.responseText);
+        var hitokoto = document.getElementById("quote-container");
+        hitokoto.innerText = data.hitokoto;
+      }
+    };
+    xhr.send();
+
+    $(function () {
+      for (i = 0; i < data.length; i++) {
+        part = data[i];
+        var html =
+          '<div class="each-part">' +
+          '   <span class="title">' +
+          part.name +
+          "</span>" +
+          '   <div class="content">';
+        items = part.items;
+        for (j = 0; j < items.length; j++) {
+          item = items[j];
+          url = item.url || "http://www.huace.cn";
+          icon = item.icon || "http://www.huace.cn/public/image/logos.png";
+          title = item.title;
+          desc = item.desc;
+          html +=
+            '<div class="each-div">' +
+            '   <a href="' +
+            url +
+            '" target="_blank">' +
+            '       <span class="title">' +
+            title +
+            "</span>" +
+            "   </a>" +
+            '   <span class="desc">' +
+            desc.replaceAll(",", "<br/>") +
+            "</span>" +
+            "</div>";
+        }
+        html += "</div></div>";
+        $(".container").append(html);
+      }
+    });
+
+    var data = [
+      {
+        name: "常用网址",
+        items: [
+          {
+            url: "http://confluence.huacenav.com:8090/pages/viewpage.action?pageId=6586596",
+            title: "Confluence",
+            desc: "",
+          },
+          {
+            url: "http://jira.huacenav.com:11100",
+            title: "JIRA",
+            desc: "",
+          },
+          {
+            url: "http://rdm.huace.cn:3000",
+            title: "RDM",
+            desc: "",
+          },
+          {
+            url: "http://oa.huace.cn:5000/",
+            title: "Huace OA",
+            desc: "",
+          },
+          {
+            url: "http://mail.huacenav.com/",
+            title: "Huace Mail",
+            desc: "",
+          },
+          {
+            url: "https://app.mockplus.cn/team/rmiplfukhh/AppSet/jRw1x8USr3HL",
+            title: "慕课",
+            desc: "UI原型",
+          },
+        ],
+      },
+	  
+	  {
+		name: "服务端",
+        items: [
+          {
+            url: "http://service.huace.cn:8086/login",
+            title: "华测云服务中台",
+            desc: "固件升级、日志下载、导航线分享",
+          },
+          {
+            url: "http://products.huacenav.com:9091/static/signIn.html",
+            title: "软件发布平台",
+            desc: "软件版本下发",
+          },
+          {
+            url: "http://122.112.158.19:8080/static/signIn.html",
+            title: "老服务中台",
+            desc: "老固件升级服务器，被华测云服务中台替换",
+          },
+          {
+            url: "http://iot.huace.cn:18083/#/clients",
+            title: "农业物联网",
+            desc: "设备在线状态",
+          },
+		  {
+            url: "http://124.70.180.169/lotfhome",
+            title: "智慧农机平台",
+            desc: "admin / 123456",
+          },
+		  {
+            url: "https://user.mockplus.cn/loginFail?next=http://app.mockplus.cn/app/5JV43oaS5ce/comment/design/1h-nKoo07CPiC",
+            title: "慕课",
+            desc: "智慧农机平台原型",
+          },
+        ],
+	  },
+
+     {
+        name: "SWAS相关",
+        items: [
+          {
+            url: "http://passport.huacenav.com:7001/login",
+            title: "账号管理平台",
+            desc: "swas密钥管理",
+          },
+          {
+            url: "http://119.3.43.1:25601/app/discover#/view/c7fcd4b0-7a84-11ec-8ffb-71c69106fd15?_g=(filters%3A!()%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3Anow-15m%2Cto%3Anow))",
+            title: "播发日志查询",
+            desc: "播发日志，根据错误信息解答用户问题。同时可以查看测站上下线情况",
+          },
+          {
+            url: "http://122.112.141.80:25602/login?next=%2Fapp%2Fdiscover#/view/9889af20-7a82-11ec-98b1-8f316c5327b9?_g=(filters%3A!()%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3Anow%2Fd%2Cto%3Anow%2Fd))",
+            title: "SWAS3.0GGA查询",
+            desc: "用户反馈精度问题，查看用户卫星数，差分龄期等",
+          },
+          {
+            url: "http://119.3.63.27:3001/d/_pTGAmb7z/yong-hu-zong-lan?orgId=1&refresh=10s",
+            title: "Grafana用户总览",
+            desc: "查看总体的用户数、固定情况等",
+          },
+        ],
+      },
+    ];
+
+
+
+</script>
+</html>
